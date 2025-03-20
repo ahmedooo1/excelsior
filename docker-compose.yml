@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build: .
+    ports:
+      - "8100:8000"
+    depends_on:
+      - user-service
+      - order-service
+    environment:
+      - USER_SERVICE_URL=http://user-service:8001
+      - ORDER_SERVICE_URL=http://order-service:8002
+
+  user-service:
+    build: ./user_service
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=postgresql://user:password@user-db:5432/userdb
+    volumes:
+      - ./user_service:/app
+      - ./application:/app/application
+    depends_on:
+      - user-db
+
+  order-service:
+    build: ./order_service
+    ports:
+      - "8002:8002"
+    environment:
+      - DATABASE_URL=postgresql://user:password@order-db:5432/orderdb
+    volumes:
+      - ./order_service:/app
+      - ./application:/app/application
+    depends_on:
+      - order-db
+
+  user-db:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=userdb
+    ports:
+      - "5433:5432"
+    volumes:
+      - userdb-data:/var/lib/postgresql/data
+
+  order-db:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=orderdb
+    ports:
+      - "5434:5432"
+    volumes:
+      - orderdb-data:/var/lib/postgresql/data
+
+volumes:
+  userdb-data:
+  orderdb-data:
