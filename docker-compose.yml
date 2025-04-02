@@ -104,8 +104,32 @@ services:
     volumes:
       - providerdb-data:/var/lib/postgresql/data
 
+repair-service:
+    build: ./repair_service
+    ports:
+      - "8006:8006"
+    environment:
+      - DATABASE_URL=postgresql://user:password@repair-db:5432/repairdb
+    volumes:
+      - ./repair_service:/app
+      - ./application:/app/application
+    depends_on:
+      - repair-db
+
+  repair-db:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=repairdb
+    ports:
+      - "5437:5432"
+    volumes:
+      - repairdb-data:/var/lib/postgresql/data
+
 volumes:
   userdb-data:
   orderdb-data:
   notificationdb-data:
   providerdb-data:
+  repairdb-data:
