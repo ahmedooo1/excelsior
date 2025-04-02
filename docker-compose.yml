@@ -58,6 +58,30 @@ services:
     volumes:
       - orderdb-data:/var/lib/postgresql/data
 
+  notification-service:
+    build: ./notification_service
+    ports:
+      - "8004:8004"
+    environment:
+      - DATABASE_URL=postgresql://user:password@notification-db:5432/notificationdb
+    volumes:
+      - ./notification_service:/app
+      - ./application:/app/application
+    depends_on:
+      - notification-db
+
+  notification-db:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=notificationdb
+    ports:
+      - "5435:5432"
+    volumes:
+      - notificationdb-data:/var/lib/postgresql/data
+
 volumes:
   userdb-data:
   orderdb-data:
+  notificationdb-data:
