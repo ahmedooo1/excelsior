@@ -1,4 +1,3 @@
-
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent))
@@ -14,7 +13,10 @@ app = FastAPI(
 )
 
 # Import all service routers
-from user_service.routes.user_routes import router as user_router
+try:
+    from user_service.routes.user_routes import router as user_router
+except ModuleNotFoundError:
+    raise ModuleNotFoundError("Ensure 'user_service/routes/user_routes.py' exists and is accessible.")
 from order_service.routes.order_routes import router as order_router
 from payment_service.routes.payment_routes import router as payment_router 
 from notification_service.routes.notification_routes import router as notification_router

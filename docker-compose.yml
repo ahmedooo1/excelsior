@@ -5,12 +5,20 @@ services:
     build: .
     ports:
       - "8100:8000"
-    depends_on:
-      - user-service
-      - order-service
     environment:
       - USER_SERVICE_URL=http://user-service:8001
       - ORDER_SERVICE_URL=http://order-service:8002
+      - PAYMENT_SERVICE_URL=http://payment-service:8003
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8004
+      - PROVIDER_SERVICE_URL=http://provider-service:8005
+      - REPAIR_SERVICE_URL=http://repair-service:8006
+    depends_on:
+      - user-service
+      - order-service
+      - payment-service
+      - notification-service
+      - provider-service
+      - repair-service
 
   user-service:
     build: ./user_service
@@ -36,6 +44,18 @@ services:
     depends_on:
       - order-db
 
+  payment-service:
+    build: ./payment_service
+    ports:
+      - "8003:8003"
+    environment:
+      - DATABASE_URL=postgresql://user:password@payment-db:5432/paymentdb
+    volumes:
+      - ./payment_service:/app
+      - ./application:/app/application
+    depends_on:
+      - payment-db
+
   user-db:
     image: postgres:13
     environment:
@@ -57,6 +77,17 @@ services:
       - "5434:5432"
     volumes:
       - orderdb-data:/var/lib/postgresql/data
+
+  payment-db:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=paymentdb
+    ports:
+      - "5438:5432"
+    volumes:
+      - paymentdb-data:/var/lib/postgresql/data
 
   notification-service:
     build: ./notification_service
@@ -133,3 +164,4 @@ volumes:
   notificationdb-data:
   providerdb-data:
   repairdb-data:
+  paymentdb-data:
