@@ -26,11 +26,13 @@ services:
       - "8001:8001"
     environment:
       - DATABASE_URL=postgresql://user:password@user-db:5432/userdb
+      - SECRET_KEY=your-secret-key
     volumes:
       - ./user_service:/app
       - ./application:/app/application
     depends_on:
       - user-db
+    restart: always
 
   order-service:
     build: ./order_service
