@@ -81,7 +81,31 @@ services:
     volumes:
       - notificationdb-data:/var/lib/postgresql/data
 
+  provider-service:
+    build: ./provider_service
+    ports:
+      - "8005:8005"
+    environment:
+      - DATABASE_URL=postgresql://user:password@provider-db:5432/providerdb
+    volumes:
+      - ./provider_service:/app
+      - ./application:/app/application
+    depends_on:
+      - provider-db
+
+  provider-db:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=providerdb
+    ports:
+      - "5436:5432"
+    volumes:
+      - providerdb-data:/var/lib/postgresql/data
+
 volumes:
   userdb-data:
   orderdb-data:
   notificationdb-data:
+  providerdb-data:
