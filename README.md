@@ -78,14 +78,49 @@ QuickServe API est un service RESTful basé sur FastAPI pour la gestion des util
 QuickServe_api/
 ├── user_service/
 │   ├── auth_service.py       # Gestion de l'authentification et des tokens JWT
-│   ├── main.py               # Points d'entrée de l'API
-│   ├── models.py             # Modèles de données
-│   ├── repositories.py       # Gestion des données en mémoire
-│   ├── dto.py                # Objets de transfert de données
-│   ├── requirements.txt      # Dépendances Python
+│   ├── main.py               # Points d'entrée de l'API utilisateur
+│   ├── models.py             # Modèles de données pour les utilisateurs
+│   ├── repositories.py       # Gestion des données utilisateur
+│   ├── dto.py                # Objets de transfert de données utilisateur
+│   ├── requirements.txt      # Dépendances Python pour le service utilisateur
 │   └── Dockerfile            # Configuration Docker pour le service utilisateur
+├── notification_service/
+│   ├── main.py               # Points d'entrée de l'API de notification
+│   ├── models.py             # Modèles de données pour les notifications
+│   ├── repositories.py       # Gestion des données de notification
+│   ├── dto.py                # Objets de transfert de données pour les notifications
+│   ├── requirements.txt      # Dépendances Python pour le service de notification
+│   └── Dockerfile            # Configuration Docker pour le service de notification
+├── order_service/
+│   ├── main.py               # Points d'entrée de l'API de commande
+│   ├── models.py             # Modèles de données pour les commandes
+│   ├── repositories.py       # Gestion des données de commande
+│   ├── dto.py                # Objets de transfert de données pour les commandes
+│   ├── requirements.txt      # Dépendances Python pour le service de commande
+│   └── Dockerfile            # Configuration Docker pour le service de commande
+├── payment_service/
+│   ├── main.py               # Points d'entrée de l'API de paiement
+│   ├── models.py             # Modèles de données pour les paiements
+│   ├── repositories.py       # Gestion des données de paiement
+│   ├── dto.py                # Objets de transfert de données pour les paiements
+│   ├── requirements.txt      # Dépendances Python pour le service de paiement
+│   └── Dockerfile            # Configuration Docker pour le service de paiement
+├── provider_service/
+│   ├── main.py               # Points d'entrée de l'API des fournisseurs
+│   ├── models.py             # Modèles de données pour les fournisseurs
+│   ├── repositories.py       # Gestion des données des fournisseurs
+│   ├── dto.py                # Objets de transfert de données pour les fournisseurs
+│   ├── requirements.txt      # Dépendances Python pour le service des fournisseurs
+│   └── Dockerfile            # Configuration Docker pour le service des fournisseurs
+├── repair_service/
+│   ├── main.py               # Points d'entrée de l'API de réparation
+│   ├── models.py             # Modèles de données pour les réparations
+│   ├── repositories.py       # Gestion des données de réparation
+│   ├── dto.py                # Objets de transfert de données pour les réparations
+│   ├── requirements.txt      # Dépendances Python pour le service de réparation
+│   └── Dockerfile            # Configuration Docker pour le service de réparation
 ├── docker-compose.yml        # Orchestration des services avec Docker Compose
-└── README.md                 # Documentation du projet
+└── README.md                 # Documentation principale du projet
 ```
 
 ## Tests
