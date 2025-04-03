@@ -19,7 +19,8 @@ def create_notification(notification: NotificationDTO):
         user_id=notification.user_id,
         message=notification.message,
         notification_type=notification.notification_type,
-        is_read=notification.is_read
+        is_read=notification.is_read,
+        created_at=datetime.now()
     )
     return notification_repository.create_notification(new_notification)
 
