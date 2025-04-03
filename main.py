@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-from fastapi import FastAPI
-from interfaces.api import router as user_router
-from interfaces.order_api import router as order_router
-
-app = FastAPI()
-
-# Register routers
-app.include_router(user_router, prefix="/api")
-app.include_router(order_router, prefix="/api")
-=======
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent))
@@ -49,4 +38,3 @@ def health_check():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8100)
->>>>>>> 59e62b14a9885c7899055d93816ce0771eb73c2a
