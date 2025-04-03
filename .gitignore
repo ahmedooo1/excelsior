@@ -1,0 +1,87 @@
+# Ignore les fichiers compilés Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+*.egg
+*.whl
+*.db
+
+*.log
+*.sqlite3
+*.sqlite
+*.db3
+*.sqlite3-journal
+*.sqlite-journal
+*.DS_Store
+# Ignore les fichiers de configuration
+*.conf
+*.cfg
+*.ini
+*.yaml
+*.yml
+
+# Ignore les fichiers de sauvegarde
+*.bak
+*.backup
+*.tmp
+*.swp
+
+
+
+
+# Ignore les fichiers de cache
+*.cache
+*.tmp
+*.temp
+*.log
+*.pid
+*.seed
+*.pid.lock
+# Ignore les fichiers de test
+*.test
+*.tests
+*.test.py
+*.test.pyc
+*.test.pyo
+*.test.pyd
+*.test.pdb
+
+# Ignore les fichiers de documentation
+*.md
+*.rst
+*.txt
+*.doc
+*.docx
+*.pdf
+*.ppt
+
+# Ignore les fichiers de configuration de l'IDE
+*.idea/
+*.sublime-project
+*.sublime-workspace
+*.vscode
+*.vscode-settings.json
+*.vscode/launch.json
+
+# Ignore les fichiers de configuration de l'environnement virtuel
+*.venv/
+.env/
+.env.local
+.env.development.local
+.env.test.local
+.env.production
+.env.development
+.env.production.local
+.env.test
+.env.production.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+
+
+
+
