@@ -18,7 +18,8 @@ def create_payment(payment: PaymentDTO):
         payment_id=payment.payment_id,
         order_id=payment.order_id,
         amount=payment.amount,
-        payment_status=payment.payment_status
+        payment_status=payment.payment_status,
+        created_at=datetime.now()
     )
     return payment_repository.create_payment(new_payment)
 
