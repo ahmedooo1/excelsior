@@ -1,79 +1,49 @@
-# QuickServe API
+# QuickServe - Plateforme de Services
 
-QuickServe API est un service RESTful basé sur FastAPI pour la gestion des utilisateurs et l'authentification avec JWT.
+## Description
+QuickServe est une plateforme de mise en relation entre utilisateurs et prestataires de services.
 
-## Fonctionnalités
+## Architecture Microservices
 
-- **Gestion des utilisateurs** : Créer, lire, mettre à jour et supprimer des utilisateurs.
-- **Authentification JWT** : Authentification sécurisée avec des tokens JWT.
-- **Endpoints protégés** : Accès restreint aux utilisateurs connectés.
-- **Swagger UI** : Documentation interactive disponible à `/docs`.
+### Services
+- **User Service** (Port 8001) : Gestion des utilisateurs et authentification
+- **Order Service** (Port 8002) : Gestion des commandes de services
+- **Payment Service** (Port 8003) : Traitement des paiements
+- **Notification Service** (Port 8004) : Système de notifications
+- **Provider Service** (Port 8005) : Gestion des prestataires
+- **Repair Service** (Port 8006) : Service de réparation
 
-## Prérequis
+### Technologies
+- FastAPI
+- Python 3.12
+- Pydantic pour la validation des données
+- PostgreSQL (Base de données utilisée pour les services)
 
-- **Python** : Version 3.9 ou supérieure.
-- **Docker** : Pour exécuter le projet dans des conteneurs.
-- **PostgreSQL** : Base de données utilisée pour les services.
 
 ## Installation
 
-1. Clonez le dépôt :
-   ```bash
-   git clone <repository-url>
-   cd QuickServe_api
-   ```
+1. Installer les dépendances :
+```bash
+pip install fastapi uvicorn pydantic
+```
 
-2. Installez les dépendances Python :
-   ```bash
-   pip install -r user_service/requirements.txt
-   ```
+2. Lancer un service (exemple avec le User Service) :
+```bash
+cd user_service
+uvicorn main:app --host 0.0.0.0 --port 8001
+```
 
-3. Configurez les variables d'environnement :
-   - Créez un fichier `.env` dans le dossier `user_service` avec les variables suivantes :
-     ```
-     SECRET_KEY=your-secret-key
-     DATABASE_URL=postgresql://user:password@localhost:5432/userdb
-     ```
+## Fonctionnalités
 
-4. Lancez les services avec Docker Compose :
-   ```bash
-   docker-compose up --build
-   ```
+- Inscription/Connexion utilisateurs
+- Gestion des commandes
+- Système de paiement
+- Notifications en temps réel
+- Gestion des prestataires
+- Service de réparation
 
-## Utilisation
-
-### Accéder à l'API
-
-- **Swagger UI** : [http://localhost:8001/docs](http://localhost:8001/docs)
-- **Requête d'exemple** :
-  ```bash
-  curl -X 'POST' \
-    'http://localhost:8001/api/auth/login' \
-    -H 'accept: application/json' \
-    -H 'Content-Type: application/x-www-form-urlencoded' \
-    -d 'username=email@example.com&password=yourpassword'
-  ```
-
-### Endpoints principaux
-
-#### Authentification
-
-- **POST /api/auth/register** : Inscription d'un utilisateur.
-- **POST /api/auth/login** : Connexion et obtention d'un token JWT.
-
-#### Gestion des utilisateurs
-
-- **GET /api/users** : Liste des utilisateurs (protégé).
-- **GET /api/users/{user_id}** : Détails d'un utilisateur (protégé).
-- **PUT /api/users/{user_id}** : Mise à jour d'un utilisateur (protégé).
-- **DELETE /api/users/{user_id}** : Suppression d'un utilisateur (protégé).
-
-#### Endpoint de santé
-
-- **GET /health** : Vérifie si le service est opérationnel.
 
 ## Structure du projet
-
 ```
 QuickServe_api/
 ├── user_service/
@@ -151,5 +121,3 @@ QuickServe_api/
 ## Licence
 
 Ce projet est sous licence MIT. Consultez le fichier `LICENSE` pour plus d'informations.
-
-
