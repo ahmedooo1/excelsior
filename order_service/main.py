@@ -21,7 +21,16 @@ def verify_user_exists(user_id: str) -> bool:
 def create_order(order: OrderDTO):
     if not verify_user_exists(order.user_id):
         raise HTTPException(status_code=404, detail="User not found")
-    new_order = Order(order_id=order.order_id, user_id=order.user_id, details=order.details)
+    new_order = Order(
+        order_id=order.order_id,
+        user_id=order.user_id,
+        service_type=order.service_type,
+        status=OrderStatus.IN_PROGRESS,
+        latitude=order.latitude,
+        longitude=order.longitude,
+        details=order.details,
+        created_at=datetime.now()
+    )
     return order_repository.create_order(new_order)
 
 @app.get("/api/orders/{order_id}", response_model=OrderDTO)
