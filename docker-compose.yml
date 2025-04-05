@@ -45,6 +45,8 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@user_db:5432/user_service
       - REDIS_URL=redis://redis:6379/0
       - SERVICE_PORT=8001
+      - ACCESS_TOKEN=${ACCESS_TOKEN}
+      - TOKEN_TYPE=${TOKEN_TYPE}
 
   # Order Service
   order_service:
@@ -60,6 +62,8 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@order_db:5432/order_service
       - REDIS_URL=redis://redis:6379/1
       - SERVICE_PORT=8002
+      - ACCESS_TOKEN=${ACCESS_TOKEN}
+      - TOKEN_TYPE=${TOKEN_TYPE}
 
   # Payment Service
   payment_service:
@@ -75,6 +79,8 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@payment_db:5432/payment_service
       - REDIS_URL=redis://redis:6379/2
       - SERVICE_PORT=8003
+      - ACCESS_TOKEN=${ACCESS_TOKEN}
+      - TOKEN_TYPE=${TOKEN_TYPE}
 
   # Notification Service
   notification_service:

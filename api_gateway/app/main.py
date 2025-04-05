@@ -1,4 +1,5 @@
-from fastapi import FastAPI, HTTPException, Depends, Request
+from fastapi import FastAPI, HTTPException, Depends, Request, status
+from app.schemas import Token, UserResponse, LoginRequest
 from fastapi.middleware.cors import CORSMiddleware
 import httpx
 import os
@@ -104,9 +105,67 @@ async def read_users(request: Request):
 async def read_user(request: Request, user_id: int):
     return await proxy_request(request, "user", f"users/{user_id}")
 
-@app.post("/api/token", tags=["auth"])
-async def login(request: Request):
-    return await proxy_request(request, "user", "token")
+@app.post(
+    "/api/token",
+    tags=["auth"],
+    summary="Obtenir un token d'authentification",
+    description="Authentifie un utilisateur et retourne un token JWT",
+    response_model=Token,
+    responses={
+        200: {"description": "Token généré avec succès"},
+        401: {"description": "Identifiants invalides"},
+        422: {"description": "Erreur de validation"}
+    }
+)
+async def login(login_data: LoginRequest, request: Request):
+    """Endpoint pour l'authentification des utilisateurs"""
+    try:
+        # Transmet la requête au user_service avec les données de login
+        response = await proxy_request(
+            request=request,
+            service="user",
+            path="token"
+        )
+        
+        # Valide que la réponse correspond au schéma Token
+        return Token(**response)
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Erreur lors de l'authentification: {str(e)}"
+        )
+
+@app.post(
+    "/api/users/", 
+    tags=["users"],
+    summary="Créer un nouvel utilisateur",
+    description="Enregistre un nouvel utilisateur dans le système",
+    response_model=UserResponse,
+    responses={
+        200: {"description": "Utilisateur créé avec succès"},
+        400: {"description": "Email déjà existant"},
+        422: {"description": "Erreur de validation"}
+    }
+)
+async def create_user(request: Request):
+    """Endpoint pour la création d'utilisateur"""
+    return await proxy_request(request, "user", "users/")
+
+@app.get(
+    "/api/users/",
+    tags=["users"], 
+    summary="Lister les utilisateurs",
+    description="Retourne la liste des utilisateurs (nécessite authentification)",
+    responses={
+        200: {"description": "Liste des utilisateurs"},
+        401: {"description": "Non authentifié"}
+    }
+)
+async def read_users(request: Request):
+    """Endpoint pour récupérer la liste des utilisateurs"""
+    return await proxy_request(request, "user", "users/")
 
 # Routes pour les commandes
 @app.post("/api/orders/", tags=["orders"])
