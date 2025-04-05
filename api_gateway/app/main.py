@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Depends, Request, status, Form
-    from app.schemas import Token, UserResponse, LoginRequest
-    from fastapi.security import OAuth2PasswordRequestForm
-    from fastapi.middleware.cors import CORSMiddleware
+from app.schemas import Token, UserResponse, LoginRequest
+from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.middleware.cors import CORSMiddleware
     import httpx
     import os
     from typing import Dict, Any, List
