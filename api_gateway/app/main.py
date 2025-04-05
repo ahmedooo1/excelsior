@@ -25,18 +25,19 @@ async def login_for_access_token(request: Request):
         if not username or not password:
             raise HTTPException(status_code=422, detail="Username and password are required")
 
-        async with http_client.post(
+        response = await http_client.post(
             f"{SERVICE_URLS['user']}/token",
             data={"username": username, "password": password},
             headers={"Content-Type": "application/x-www-form-urlencoded"}
-        ) as response:
-            if response.status_code == 401:
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Email ou mot de passe incorrect",
-                    headers={"WWW-Authenticate": "Bearer"},
-                )
-            return await response.json()
+        )
+        
+        if response.status_code == 401:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Email ou mot de passe incorrect",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        return await response.json()
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
