@@ -8,7 +8,7 @@ channel = "stable-24_05"
 run = ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port 8000"]
 
 [workflows]
-runButton = "Run"
+runButton = "Run Gateway"
 
 [[workflows.workflow]]
 name = "Run"
@@ -18,3 +18,12 @@ mode = "sequential"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "uvicorn main:app --host 0.0.0.0 --port 8100"
+
+[[workflows.workflow]]
+name = "Run Gateway"
+author = 40868364
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "uvicorn api_gateway.app.main:app --host 0.0.0.0 --port 8000 --reload"
