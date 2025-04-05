@@ -2,6 +2,9 @@
 
 API de services à la demande basée sur une architecture microservices avec FastAPI et PostgreSQL.
 
+## Description
+QuickServe est une plateforme de mise en relation entre utilisateurs et prestataires de services.
+
 ## Architecture
 
 L'API QuickServe est composée des microservices suivants :
@@ -24,6 +27,7 @@ L'API QuickServe est composée des microservices suivants :
 - **PostgreSQL** : Base de données relationnelle
 - **Docker** : Conteneurisation des services
 - **Redis** : Cache pour améliorer les performances
+- **Pydantic** : Validation des données
 
 ## Prérequis
 
@@ -94,6 +98,19 @@ pytest
 cd services/user_service
 pytest
 ```
+
+Vous pouvez également tester l'API avec Swagger :
+- Accédez à [http://localhost:8000/docs](http://localhost:8000/docs).
+- Testez les endpoints interactifs.
+
+## Contribution
+
+1. Forkez le dépôt.
+2. Créez une branche pour vos modifications :
+   ```bash
+   git checkout -b feature/your-feature
+   ```
+3. Soumettez une pull request.
 
 ## Licence
 

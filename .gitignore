@@ -26,6 +26,11 @@ var/
 venv/
 ENV/
 .env
+.env.local
+.env.development
+.env.test
+.env.production
+.env.*.local
 
 # Fichiers de logs
 *.log
@@ -33,7 +38,11 @@ logs/
 
 # Fichiers de base de données
 *.sqlite3
+*.sqlite
 *.db
+*.db3
+*.sqlite-journal
+*.sqlite3-journal
 
 # Fichiers Docker
 .dockerignore
@@ -44,12 +53,21 @@ logs/
 *.swp
 *.swo
 .DS_Store
+*.sublime-project
+*.sublime-workspace
 
 # Fichiers temporaires
 tmp/
 temp/
+*.tmp
+*.bak
+*.backup
 
 # Fichiers de cache
 .pytest_cache/
 .coverage
 htmlcov/
+*.cache
+*.pid
+*.seed
+*.pid.lock
