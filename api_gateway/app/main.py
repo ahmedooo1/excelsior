@@ -23,11 +23,18 @@ app = FastAPI(title="QuickServe API Gateway",
 
 # Configuration des routes d'authentification
 @app.post("/api/token", tags=["auth"])
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+async def login_for_access_token(request: Request):
     try:
+        if request.headers.get("content-type") == "application/json":
+            body = await request.json()
+            data = {"username": body["username"], "password": body["password"]}
+        else:
+            form = await request.form()
+            data = {"username": form["username"], "password": form["password"]}
+            
         async with http_client.post(
             f"{SERVICE_URLS['user']}/token",
-            data={"username": form_data.username, "password": form_data.password},
+            data=data,
             headers={"Content-Type": "application/x-www-form-urlencoded"}
         ) as response:
             if response.status_code == 401:
