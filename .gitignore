@@ -1,0 +1,55 @@
+# Fichier .gitignore pour le projet QuickServe API
+
+# Environnement Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Environnement virtuel
+venv/
+ENV/
+.env
+
+# Fichiers de logs
+*.log
+logs/
+
+# Fichiers de base de données
+*.sqlite3
+*.db
+
+# Fichiers Docker
+.dockerignore
+
+# Fichiers d'IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Fichiers temporaires
+tmp/
+temp/
+
+# Fichiers de cache
+.pytest_cache/
+.coverage
+htmlcov/

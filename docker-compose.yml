@@ -1,0 +1,294 @@
+version: '3.8'
+
+services:
+  # API Gateway
+  api_gateway:
+    build: ./api_gateway
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api_gateway:/app
+    depends_on:
+      - user_service
+      - order_service
+      - payment_service
+      - notification_service
+      - provider_service
+      - transport_service
+      - moving_service
+      - cleaning_service
+      - repair_service
+      - child_assistance_service
+    environment:
+      - USER_SERVICE_URL=http://user_service:8001
+      - ORDER_SERVICE_URL=http://order_service:8002
+      - PAYMENT_SERVICE_URL=http://payment_service:8003
+      - NOTIFICATION_SERVICE_URL=http://notification_service:8004
+      - PROVIDER_SERVICE_URL=http://provider_service:8005
+      - TRANSPORT_SERVICE_URL=http://transport_service:8006
+      - MOVING_SERVICE_URL=http://moving_service:8007
+      - CLEANING_SERVICE_URL=http://cleaning_service:8008
+      - REPAIR_SERVICE_URL=http://repair_service:8009
+      - CHILD_ASSISTANCE_SERVICE_URL=http://child_assistance_service:8010
+
+  # User Service
+  user_service:
+    build: ./services/user_service
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./services/user_service:/app
+    depends_on:
+      - user_db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@user_db:5432/user_service
+      - REDIS_URL=redis://redis:6379/0
+      - SERVICE_PORT=8001
+
+  # Order Service
+  order_service:
+    build: ./services/order_service
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./services/order_service:/app
+    depends_on:
+      - order_db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@order_db:5432/order_service
+      - REDIS_URL=redis://redis:6379/1
+      - SERVICE_PORT=8002
+
+  # Payment Service
+  payment_service:
+    build: ./services/payment_service
+    ports:
+      - "8003:8003"
+    volumes:
+      - ./services/payment_service:/app
+    depends_on:
+      - payment_db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@payment_db:5432/payment_service
+      - REDIS_URL=redis://redis:6379/2
+      - SERVICE_PORT=8003
+
+  # Notification Service
+  notification_service:
+    build: ./services/notification_service
+    ports:
+      - "8004:8004"
+    volumes:
+      - ./services/notification_service:/app
+    depends_on:
+      - notification_db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@notification_db:5432/notification_service
+      - REDIS_URL=redis://redis:6379/3
+      - SERVICE_PORT=8004
+
+  # Provider Service
+  provider_service:
+    build: ./services/provider_service
+    ports:
+      - "8005:8005"
+    volumes:
+      - ./services/provider_service:/app
+    depends_on:
+      - provider_db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@provider_db:5432/provider_service
+      - REDIS_URL=redis://redis:6379/4
+      - SERVICE_PORT=8005
+
+  # Transport Service
+  transport_service:
+    build: ./services/transport_service
+    ports:
+      - "8006:8006"
+    volumes:
+      - ./services/transport_service:/app
+    depends_on:
+      - transport_db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@transport_db:5432/transport_service
+      - REDIS_URL=redis://redis:6379/5
+      - SERVICE_PORT=8006
+
+  # Moving Service
+  moving_service:
+    build: ./services/moving_service
+    ports:
+      - "8007:8007"
+    volumes:
+      - ./services/moving_service:/app
+    depends_on:
+      - moving_db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@moving_db:5432/moving_service
+      - REDIS_URL=redis://redis:6379/6
+      - SERVICE_PORT=8007
+
+  # Cleaning Service
+  cleaning_service:
+    build: ./services/cleaning_service
+    ports:
+      - "8008:8008"
+    volumes:
+      - ./services/cleaning_service:/app
+    depends_on:
+      - cleaning_db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@cleaning_db:5432/cleaning_service
+      - REDIS_URL=redis://redis:6379/7
+      - SERVICE_PORT=8008
+
+  # Repair Service
+  repair_service:
+    build: ./services/repair_service
+    ports:
+      - "8009:8009"
+    volumes:
+      - ./services/repair_service:/app
+    depends_on:
+      - repair_db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@repair_db:5432/repair_service
+      - REDIS_URL=redis://redis:6379/8
+      - SERVICE_PORT=8009
+
+  # Child Assistance Service
+  child_assistance_service:
+    build: ./services/child_assistance_service
+    ports:
+      - "8010:8010"
+    volumes:
+      - ./services/child_assistance_service:/app
+    depends_on:
+      - child_assistance_db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@child_assistance_db:5432/child_assistance_service
+      - REDIS_URL=redis://redis:6379/9
+      - SERVICE_PORT=8010
+
+  # Databases
+  user_db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=user_service
+    volumes:
+      - user_db_data:/var/lib/postgresql/data
+
+  order_db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=order_service
+    volumes:
+      - order_db_data:/var/lib/postgresql/data
+
+  payment_db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=payment_service
+    volumes:
+      - payment_db_data:/var/lib/postgresql/data
+
+  notification_db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=notification_service
+    volumes:
+      - notification_db_data:/var/lib/postgresql/data
+
+  provider_db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=provider_service
+    volumes:
+      - provider_db_data:/var/lib/postgresql/data
+
+  transport_db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=transport_service
+    volumes:
+      - transport_db_data:/var/lib/postgresql/data
+
+  moving_db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=moving_service
+    volumes:
+      - moving_db_data:/var/lib/postgresql/data
+
+  cleaning_db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=cleaning_service
+    volumes:
+      - cleaning_db_data:/var/lib/postgresql/data
+
+  repair_db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=repair_service
+    volumes:
+      - repair_db_data:/var/lib/postgresql/data
+
+  child_assistance_db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=child_assistance_service
+    volumes:
+      - child_assistance_db_data:/var/lib/postgresql/data
+
+  # Redis for caching
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  user_db_data:
+  order_db_data:
+  payment_db_data:
+  notification_db_data:
+  provider_db_data:
+  transport_db_data:
+  moving_db_data:
+  cleaning_db_data:
+  repair_db_data:
+  child_assistance_db_data:
+  redis_data:
