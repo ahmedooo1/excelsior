@@ -24,17 +24,24 @@ app = FastAPI(title="QuickServe API Gateway",
 # Configuration des routes d'authentification
 @app.post("/api/token", tags=["auth"])
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    async with http_client.post(
-        f"{SERVICE_URLS['user']}/token",
-        data={"username": form_data.username, "password": form_data.password}
-    ) as response:
-        if response.status_code == 401:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Email ou mot de passe incorrect",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-        return await response.json()
+    try:
+        async with http_client.post(
+            f"{SERVICE_URLS['user']}/token",
+            data={"username": form_data.username, "password": form_data.password},
+            headers={"Content-Type": "application/x-www-form-urlencoded"}
+        ) as response:
+            if response.status_code == 401:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Email ou mot de passe incorrect",
+                    headers={"WWW-Authenticate": "Bearer"},
+                )
+            return await response.json()
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
 
 # Configuration CORS
 app.add_middleware(
