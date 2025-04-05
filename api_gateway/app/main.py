@@ -1,4 +1,4 @@
-    from fastapi import FastAPI, HTTPException, Depends, Request, status, Form
+from fastapi import FastAPI, HTTPException, Depends, Request, status, Form
     from app.schemas import Token, UserResponse, LoginRequest
     from fastapi.security import OAuth2PasswordRequestForm
     from fastapi.middleware.cors import CORSMiddleware
@@ -24,11 +24,11 @@
 
     # Configuration des routes d'authentification
     @app.post("/api/token", tags=["auth"])
-    async def login_for_access_token(username: str = Form(...), password: str = Form(...)):
+    async def login_for_access_token(login_data: LoginRequest):
         try:
             async with http_client.post(
                 f"{SERVICE_URLS['user']}/token",
-                data={"username": username, "password": password},
+                data={"username": login_data.username, "password": login_data.password},
                 headers={"Content-Type": "application/x-www-form-urlencoded"}
             ) as response:
                 if response.status_code == 401:
