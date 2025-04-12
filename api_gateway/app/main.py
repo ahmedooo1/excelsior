@@ -9,7 +9,7 @@ import json
 from fastapi.openapi.utils import get_openapi
 
 # JWT Configuration
-SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+SECRET_KEY = "une_cle_secrete_hyper_securisee_123!"  # Match User Service secret key
 ALGORITHM = "HS256"
 
 app = FastAPI(title="QuickServe API Gateway",
