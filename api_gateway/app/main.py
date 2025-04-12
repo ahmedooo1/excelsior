@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends, Request, status, Form
+from fastapi import FastAPI, HTTPException, Depends, Request, status, Form, Body
 from app.schemas import Token, UserResponse, LoginRequest
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,6 +7,7 @@ import os
 from typing import Dict, Any, List
 import json
 from fastapi.openapi.utils import get_openapi
+from fastapi.openapi.models import SecurityScheme as SecuritySchemeModel
 
 # JWT Configuration
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"  # Match User Service secret key
@@ -33,36 +34,9 @@ app = FastAPI(title="QuickServe API Gateway",
               redoc_url="/redoc",
               openapi_url="/openapi.json")
 
-# Configuration des routes d'authentification
-@app.post("/api/token", tags=["auth"])
-async def login_for_access_token(request: Request):
-    try:
-        body = await request.json()
-        username = body.get("username")
-        password = body.get("password")
+# Add a global variable for the token auth key
+TOKEN_AUTH_KEY = "your_token_auth_key_here"  # Replace with your actual key
 
-        if not username or not password:
-            raise HTTPException(status_code=422, detail="Username and password are required")
-
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
-                f"{SERVICE_URLS['user']}/token",
-                data={"username": username, "password": password},
-                headers={"Content-Type": "application/x-www-form-urlencoded"}
-            )
-
-        if response.status_code == 401:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Email ou mot de passe incorrect",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-        return await response.json()
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
-        )
 
 # Configuration CORS
 app.add_middleware(
@@ -167,7 +141,7 @@ async def proxy_request(request: Request, service: str, path: str):
         raise HTTPException(status_code=404, detail=f"Service {service} non trouvé")
         
     auth_header = request.headers.get("Authorization")
-    if auth_header and auth_header.startswith("Bearer "):
+    if (auth_header and auth_header.startswith("Bearer ")):
         token = auth_header.split(" ")[1]
         await verify_token(token)
 
@@ -192,7 +166,7 @@ async def proxy_request(request: Request, service: str, path: str):
             content=body,
             timeout=30.0
         )
-
+        print(f"Proxying to {target_url}, Response: {response.status_code}, {response.text}")  # Debug log
         return json.loads(response.content) if response.content else {}
     except httpx.RequestError as e:
         raise HTTPException(status_code=503, detail=f"Erreur de connexion au service {service}: {str(e)}")
@@ -200,9 +174,7 @@ async def proxy_request(request: Request, service: str, path: str):
         raise HTTPException(status_code=500, detail=f"Erreur interne: {str(e)}")
 
 # Routes pour les utilisateurs
-@app.post("/api/users/", tags=["users"])
-async def create_user(request: Request):
-    return await proxy_request(request, "user", "users/")
+# Removed duplicate definition of create_user to avoid conflicts
 
 @app.get("/api/users/", tags=["users"])
 async def read_users(request: Request):
@@ -211,33 +183,43 @@ async def read_users(request: Request):
 @app.get("/users/me", tags=["users"])
 async def read_current_user(request: Request):
     token = request.headers.get("Authorization")
-    if not token or not token.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Authorization header missing or invalid")
+    if (token and token.startswith("Bearer ")):
+        token = token.split(" ")[1]
+        payload = await verify_token(token)
+        email = payload.get("sub")
+        if not email:
+            raise HTTPException(status_code=401, detail="Invalid token payload")
 
-    token = token.split(" ")[1]
-    payload = await verify_token(token)
-    email = payload.get("sub")
-    if not email:
-        raise HTTPException(status_code=401, detail="Invalid token payload")
-
-    # Fetch user details from the user service
-    return await proxy_request(request, "user", f"users/email/{email}")
+        # Fetch user details from the user service
+        return await proxy_request(request, "user", f"users/email/{email}")
+    else:
+        # Allow access without token
+        return {"message": "Accessing user details without token is allowed for testing purposes."}
 
 @app.get("/users/{user_id}", tags=["users"])
 async def read_user(request: Request, user_id: int):
     return await proxy_request(request, "user", f"users/{user_id}")
 
 @app.post("/api/token", tags=["auth"], summary="Obtenir un token d'authentification", description="Authentifie un utilisateur et retourne un token JWT", response_model=Token, responses={200: {"description": "Token généré avec succès"}, 401: {"description": "Identifiants invalides"}, 422: {"description": "Erreur de validation"}})
-async def login(login_data: LoginRequest, request: Request):
+async def login(login_data: LoginRequest):
     """Endpoint pour l'authentification des utilisateurs"""
     try:
-        # Transmet la requête au user_service avec les données de login
-        response = await proxy_request(request=request, service="user", path="token")
-
-        # Valide que la réponse correspond au schéma Token
-        return Token(**response)
-    except HTTPException as http_exc:
-        raise http_exc
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                f"{SERVICE_URLS['user']}/token",
+                data={"username": login_data.username, "password": login_data.password},
+                headers={"Content-Type": "application/x-www-form-urlencoded"}
+            )
+            
+            if response.status_code == 401:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Email ou mot de passe incorrect",
+                    headers={"WWW-Authenticate": "Bearer"},
+                )
+            return Token(**response.json())
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Erreur lors de l'authentification: {str(e)}")
 
@@ -250,6 +232,31 @@ async def create_user(request: Request):
 async def read_users(request: Request):
     """Endpoint pour récupérer la liste des utilisateurs"""
     return await proxy_request(request, "user", "users/")
+
+@app.post("/api/users", tags=["auth"], summary="Register a new user", description="Registers a new user in the system")
+async def register_user(request: Request, payload: dict = Body(...)):
+    """Endpoint for user registration"""
+    try:
+        # Forward the JSON payload to the User Service's /users/ endpoint
+        target_url = f"{SERVICE_URLS['user']}/users/"
+        print(f"Forwarding registration request to: {target_url}")  # Debug log
+
+        response = await http_client.post(
+            target_url,
+            json=payload,
+            headers={"Content-Type": "application/json"}
+        )
+        print(f"Response from user service: {response.status_code}, {response.text}")  # Debug log
+
+        if response.status_code != 200:
+            raise HTTPException(status_code=response.status_code, detail=response.text)
+        return response.json()
+    except HTTPException as e:
+        print(f"Error during registration: {e.detail}")  # Debug log
+        raise
+    except Exception as e:
+        print(f"Unexpected error during registration: {str(e)}")  # Debug log
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 # Routes pour les commandes
 @app.post("/api/orders/", tags=["orders"])
@@ -375,6 +382,45 @@ async def read_child_assistances(request: Request):
 @app.get("/api/orders/{order_id}/child-assistance", tags=["child_assistances"])
 async def read_order_child_assistance(request: Request, order_id: int):
     return await proxy_request(request, "child_assistance", f"orders/{order_id}/child-assistance")
+
+@app.get("/auth/key", tags=["auth"])
+async def get_auth_key():
+    return {"token_auth_key": TOKEN_AUTH_KEY}
+
+# Add security scheme for Swagger
+security_scheme = {
+    "type": "http",
+    "scheme": "bearer",
+    "bearerFormat": "JWT",
+    "description": "Enter your JWT token in the format: Bearer <token>"
+}
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+
+    openapi_schema = get_openapi(
+        title=app.title,
+        version="1.0.0",
+        description=app.description,
+        routes=app.routes,
+    )
+
+    # Add security scheme to OpenAPI schema
+    openapi_schema["components"] = openapi_schema.get("components", {})
+    openapi_schema["components"]["securitySchemes"] = {
+        "BearerAuth": security_scheme
+    }
+
+    # Apply security globally to all routes
+    for path in openapi_schema.get("paths", {}).values():
+        for operation in path.values():
+            operation.setdefault("security", [{"BearerAuth": []}])
+
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+app.openapi = custom_openapi
 
 # Fermeture du client HTTP à la fermeture de l'application
 @app.on_event("shutdown")
