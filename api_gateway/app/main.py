@@ -12,6 +12,21 @@ from fastapi.openapi.utils import get_openapi
 SECRET_KEY = "une_cle_secrete_hyper_securisee_123!"  # Match User Service secret key
 ALGORITHM = "HS256"
 
+from jose import JWTError, jwt
+from fastapi.security import OAuth2PasswordBearer
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+async def verify_token(token: str):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token: Signature verification failed"
+        )
+
 app = FastAPI(title="QuickServe API Gateway",
               description="Passerelle API pour les microservices QuickServe",
               docs_url="/docs",
@@ -150,6 +165,11 @@ async def health_check():
 async def proxy_request(request: Request, service: str, path: str):
     if service not in SERVICE_URLS:
         raise HTTPException(status_code=404, detail=f"Service {service} non trouvé")
+        
+    auth_header = request.headers.get("Authorization")
+    if auth_header and auth_header.startswith("Bearer "):
+        token = auth_header.split(" ")[1]
+        await verify_token(token)
 
     service_url = SERVICE_URLS[service]
     target_url = f"{service_url}/{path}"
