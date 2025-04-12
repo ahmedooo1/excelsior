@@ -5,7 +5,7 @@ services:
   api_gateway:
     build: ./api_gateway
     ports:
-      - "8000:8000"
+      - "8080:8000"
     volumes:
       - ./api_gateway:/app
     depends_on:

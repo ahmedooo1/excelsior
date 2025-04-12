@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Header
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
@@ -28,39 +28,47 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Impossible de valider les identifiants",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email: str = payload.get("sub")
-        if email is None:
-            raise credentials_exception
-        token_data = TokenData(email=email)
-    except JWTError:
-        raise credentials_exception
-    user = get_user_by_email(db, email=token_data.email)
-    if user is None:
-        raise credentials_exception
-    return user
-
-@router.post("/token", response_model=Token)
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = authenticate_user(db, form_data.username, form_data.password)
-    if not user:
+async def get_current_user(authorization: str = Header(None), db: Session = Depends(get_db)):
+    if not authorization or not authorization.startswith("Bearer "):
+        print("Authorization header missing or invalid")  # Log
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Email ou mot de passe incorrect",
-            headers={"WWW-Authenticate": "Bearer"},
+            detail="Authorization header must start with 'Bearer '",
         )
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": user.email}, expires_delta=access_token_expires
-    )
-    return {"access_token": access_token, "token_type": "bearer"}
+    
+    token = authorization.split(" ")[1]
+    
+    try:
+        print(f"Token reçu: {token}")  # Log du token reçu
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        print(f"Payload décodé: {payload}")  # Log du payload décodé
+        
+        email = payload.get("sub")
+        if not email:
+            print("Email manquant dans le payload")  # Log
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token: no email in payload",
+            )
+            
+        user = get_user_by_email(db, email=email)
+        if not user:
+            print(f"Utilisateur non trouvé pour email: {email}")  # Log
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="User not found",
+            )
+            
+        return user
+        
+    except JWTError as e:
+        print(f"Erreur JWT: {str(e)}")  # Log
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Invalid token: {str(e)}",
+        )
+
+# The login endpoint has been removed as per the new requirement.
 
 @router.post("/users/", response_model=UserResponse)
 def create_new_user(user: UserCreate, db: Session = Depends(get_db)):
@@ -81,6 +89,7 @@ def read_user(user_id: int, db: Session = Depends(get_db), current_user: UserRes
         raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
     return db_user
 
-@router.get("/users/me/", response_model=UserResponse)
-async def read_users_me(current_user: UserResponse = Depends(get_current_user)):
+@router.get("/users/me", response_model=UserResponse)
+def read_current_user(current_user: UserResponse = Depends(get_current_user)):
+    """Get current authenticated user"""
     return current_user
