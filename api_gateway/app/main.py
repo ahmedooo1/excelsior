@@ -9,7 +9,7 @@ import json
 from fastapi.openapi.utils import get_openapi
 
 # JWT Configuration
-SECRET_KEY = "une_cle_secrete_hyper_securisee_123!"  # Match User Service secret key
+SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"  # Match User Service secret key
 ALGORITHM = "HS256"
 
 from jose import JWTError, jwt
@@ -208,7 +208,22 @@ async def create_user(request: Request):
 async def read_users(request: Request):
     return await proxy_request(request, "user", "users/")
 
-@app.get("/api/users/{user_id}", tags=["users"])
+@app.get("/users/me", tags=["users"])
+async def read_current_user(request: Request):
+    token = request.headers.get("Authorization")
+    if not token or not token.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Authorization header missing or invalid")
+
+    token = token.split(" ")[1]
+    payload = await verify_token(token)
+    email = payload.get("sub")
+    if not email:
+        raise HTTPException(status_code=401, detail="Invalid token payload")
+
+    # Fetch user details from the user service
+    return await proxy_request(request, "user", f"users/email/{email}")
+
+@app.get("/users/{user_id}", tags=["users"])
 async def read_user(request: Request, user_id: int):
     return await proxy_request(request, "user", f"users/{user_id}")
 
