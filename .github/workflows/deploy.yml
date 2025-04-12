@@ -21,7 +21,18 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
+            # Se déplacer dans le répertoire du projet
             cd /var/www/QuickServe
+            
+            # Mettre à jour le code du dépôt
             git pull origin main
+            
+            # Installer les dépendances Python (si nécessaire)
+            if [ -f "requirements.txt" ]; then
+              echo "Installation des dépendances Python..."
+              pip3 install -r requirements.txt
+            fi
+            
+            # Mettre à jour les conteneurs Docker
             docker-compose down
             docker-compose up -d --build
