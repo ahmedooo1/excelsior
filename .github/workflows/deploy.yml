@@ -27,10 +27,19 @@ jobs:
             # Mettre à jour le code du dépôt
             git pull origin main
             
+            # Vérifier si un environnement virtuel existe
+            if [ ! -d "/home/debian/venv" ]; then
+              echo "Environnement virtuel non trouvé, création en cours..."
+              python3 -m venv /home/debian/venv
+            fi
+            
+            # Activer l'environnement virtuel
+            source /home/debian/venv/bin/activate
+            
             # Installer les dépendances Python (si nécessaire)
             if [ -f "requirements.txt" ]; then
               echo "Installation des dépendances Python..."
-              pip3 install -r requirements.txt
+              pip install -r requirements.txt
             fi
             
             # Mettre à jour les conteneurs Docker
