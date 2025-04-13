@@ -55,7 +55,7 @@ docker-compose ps
 
 ## Utilisation
 
-L'API est accessible à l'adresse suivante : http://localhost:8000/api/
+L'API est accessible à l'adresse suivante : http://localhost:8080/docs/
 
 Pour vérifier l'état de santé de tous les services :
 ```
@@ -100,7 +100,7 @@ pytest
 ```
 
 Vous pouvez également tester l'API avec Swagger :
-- Accédez à [http://localhost:8000/docs](http://localhost:8000/docs).
+- Accédez à [http://localhost:8080/docs](http://localhost:8080/docs).
 - Testez les endpoints interactifs.
 
 ## Contribution
