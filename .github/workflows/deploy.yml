@@ -45,3 +45,7 @@ jobs:
             # Mettre à jour les conteneurs Docker
             docker-compose down
             docker-compose up -d --build
+            
+            # Recharger la configuration Nginx
+            sudo nginx -t && sudo systemctl reload nginx
+
