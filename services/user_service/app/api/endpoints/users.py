@@ -8,6 +8,8 @@ from typing import List
 from app.schemas import UserCreate, UserResponse, Token, TokenData
 from app.crud import get_user, get_user_by_email, get_users, create_user, authenticate_user
 from app.database import get_db
+import os
+from dotenv import load_dotenv
 
 # Configuration de l'authentification
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"  # À remplacer par une clé sécurisée en production
@@ -77,7 +79,10 @@ def create_new_user(user: UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Email déjà enregistré")
     return create_user(db=db, user=user)
 
-@router.get("/users/", response_model=List[UserResponse])
+load_dotenv()
+path_users = os.getenv("pathUsers", "/users")
+
+@router.get(f"{path_users}/", response_model=List[UserResponse])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = get_users(db, skip=skip, limit=limit)
     return users
