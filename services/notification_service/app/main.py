@@ -6,7 +6,15 @@ from app.api.api import router
 # Création des tables dans la base de données
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="NotificationService", description="Service de gestion des notifications")
+app = FastAPI(
+    title="NotificationService",
+    description="Service de gestion des notifications pour QuickServe",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json",
+    root_path="/notification_service"
+    
+    )
 
 # Configuration CORS
 app.add_middleware(

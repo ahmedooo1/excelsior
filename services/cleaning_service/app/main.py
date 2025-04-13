@@ -6,7 +6,14 @@ from app.api.api import router
 # Création des tables dans la base de données
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="CleaningService", description="Service de gestion des nettoyages")
+app = FastAPI(
+    title="CleaningService", 
+    description="Service de gestion des nettoyages",
+    docs_url="/docs",   
+    redoc_url="/redoc",
+    openapi_url="/openapi.json",
+    root_path="/cleaning_service"
+    )
 
 # Configuration CORS
 app.add_middleware(

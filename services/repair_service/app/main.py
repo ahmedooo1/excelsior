@@ -6,8 +6,14 @@ from app.api.api import router
 # Création des tables dans la base de données
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="RepairService", description="Service de gestion des dépannages")
-
+app = FastAPI(
+    title="RepairService",
+    description="Service de gestion des réparations pour QuickServe",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json",
+    root_path="/repair_service"
+)
 # Configuration CORS
 app.add_middleware(
     CORSMiddleware,
