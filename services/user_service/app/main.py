@@ -14,7 +14,6 @@ from fastapi.openapi.utils import get_openapi
 
 # Déplacement de la définition de `app` avant toute utilisation
 app = FastAPI(
-    root_path="/user_service",
     title="UserService",
     description="Service de gestion des utilisateurs",
     openapi_tags=[
