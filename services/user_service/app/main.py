@@ -15,15 +15,10 @@ from fastapi.openapi.utils import get_openapi
 # Déplacement de la définition de `app` avant toute utilisation
 app = FastAPI(
     title="UserService",
-    description="Service de gestion des utilisateurs",
-    openapi_tags=[
-        {
-            "name": "auth",
-            "description": "Endpoints pour l'authentification et la gestion des tokens."
-        }
-    ],
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc",
+    openapi_url="/openapi.json",
+    root_path="/user_service"
 )
 
 # Création des tables dans la base de données
