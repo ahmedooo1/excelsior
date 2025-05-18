@@ -80,7 +80,7 @@ def create_new_user(user: UserCreate, db: Session = Depends(get_db)):
     return create_user(db=db, user=user)
 
 load_dotenv()
-path_users = os.getenv("pathUsers", "/users")
+path_users = os.getenv("pathUsers", "/users_service/users")
 
 @router.get(f"{path_users}/", response_model=List[UserResponse])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
