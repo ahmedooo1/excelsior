@@ -1,0 +1,34 @@
+2025-04-05 20:08:37 INFO:     Will watch for changes in these directories: ['/app']
+2025-04-05 20:08:37 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2025-04-05 20:08:37 INFO:     Started reloader process [1] using StatReload
+2025-04-05 20:08:38 Process SpawnProcess-1:
+2025-04-05 20:08:38 Traceback (most recent call last):
+2025-04-05 20:08:38   File "/usr/local/lib/python3.10/multiprocessing/process.py", line 314, in _bootstrap
+2025-04-05 20:08:38     self.run()
+2025-04-05 20:08:38   File "/usr/local/lib/python3.10/multiprocessing/process.py", line 108, in run
+2025-04-05 20:08:38     self._target(*self._args, **self._kwargs)
+2025-04-05 20:08:38   File "/usr/local/lib/python3.10/site-packages/uvicorn/_subprocess.py", line 76, in subprocess_started
+2025-04-05 20:08:38     target(sockets=sockets)
+2025-04-05 20:08:38   File "/usr/local/lib/python3.10/site-packages/uvicorn/server.py", line 61, in run
+2025-04-05 20:08:38     return asyncio.run(self.serve(sockets=sockets))
+2025-04-05 20:08:38   File "/usr/local/lib/python3.10/asyncio/runners.py", line 44, in run
+2025-04-05 20:08:38     return loop.run_until_complete(main)
+2025-04-05 20:08:38   File "/usr/local/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+2025-04-05 20:08:38     return future.result()
+2025-04-05 20:08:38   File "/usr/local/lib/python3.10/site-packages/uvicorn/server.py", line 68, in serve
+2025-04-05 20:08:38     config.load()
+2025-04-05 20:08:38   File "/usr/local/lib/python3.10/site-packages/uvicorn/config.py", line 467, in load
+2025-04-05 20:08:38     self.loaded_app = import_from_string(self.app)
+2025-04-05 20:08:38   File "/usr/local/lib/python3.10/site-packages/uvicorn/importer.py", line 21, in import_from_string
+2025-04-05 20:08:38     module = importlib.import_module(module_str)
+2025-04-05 20:08:38   File "/usr/local/lib/python3.10/importlib/__init__.py", line 126, in import_module
+2025-04-05 20:08:38     return _bootstrap._gcd_import(name[level:], package, level)
+2025-04-05 20:08:38   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+2025-04-05 20:08:38   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+2025-04-05 20:08:38   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+2025-04-05 20:08:38   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+2025-04-05 20:08:38   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+2025-04-05 20:08:38   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+2025-04-05 20:08:38   File "/app/app/main.py", line 26, in <module>
+2025-04-05 20:08:38     async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+2025-04-05 20:08:38 NameError: name 'OAuth2PasswordRequestForm' is not defined

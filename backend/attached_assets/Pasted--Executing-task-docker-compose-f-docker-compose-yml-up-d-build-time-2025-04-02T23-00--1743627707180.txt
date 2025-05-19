@@ -1,0 +1,76 @@
+ *  Executing task: docker compose -f 'docker-compose.yml' up -d --build 
+
+time="2025-04-02T23:00:55+02:00" level=warning msg="C:\\Users\\aa545\\Documents\\M4D24\\QuickServe_api\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+[+] Building 2.8s (28/28) FINISHED                                                                            docker:desktop-linux
+ => [user-service internal] load build definition from Dockerfile                                                             0.0s
+ => => transferring dockerfile: 263B                                                                                          0.0s
+ => [order-service internal] load build definition from Dockerfile                                                            0.0s 
+ => => transferring dockerfile: 263B                                                                                          0.0s 
+ => [api-gateway internal] load metadata for docker.io/library/python:3.11                                                    1.4s 
+ => [user-service auth] library/python:pull token for registry-1.docker.io                                                    0.0s
+ => [user-service internal] load .dockerignore                                                                                0.0s
+ => => transferring context: 2B                                                                                               0.0s 
+ => [order-service internal] load .dockerignore                                                                               0.0s 
+ => => transferring context: 2B                                                                                               0.0s 
+ => [api-gateway 1/5] FROM docker.io/library/python:3.11@sha256:ebfa8696e47a68cffebb31e370a93ce57c01bc753f246ceaaef72801d166  0.1s 
+ => => resolve docker.io/library/python:3.11@sha256:ebfa8696e47a68cffebb31e370a93ce57c01bc753f246ceaaef72801d1661351          0.0s 
+ => [order-service internal] load build context                                                                               0.0s
+ => => transferring context: 3.72kB                                                                                           0.0s 
+ => [user-service internal] load build context                                                                                0.0s 
+ => => transferring context: 768B                                                                                             0.0s 
+ => CACHED [api-gateway 2/5] WORKDIR /app                                                                                     0.0s 
+ => CACHED [user-service 3/5] COPY requirements.txt .                                                                         0.0s 
+ => CACHED [user-service 4/5] RUN pip install -r requirements.txt                                                             0.0s 
+ => CACHED [user-service 5/5] COPY . .                                                                                        0.0s 
+ => CACHED [order-service 3/5] COPY requirements.txt .                                                                        0.0s 
+ => CACHED [order-service 4/5] RUN pip install -r requirements.txt                                                            0.0s 
+ => [order-service 5/5] COPY . .                                                                                              0.1s 
+ => [user-service] exporting to image                                                                                         0.1s 
+ => => exporting layers                                                                                                       0.0s 
+ => => exporting manifest sha256:c5eb98c2756e45e7c587038518086b45c484bfd1849864eb1eae05d7e846561d                             0.0s 
+ => => exporting config sha256:dbf3ccc8f729b10ebbc14523f51a4b266f524cc17df0ffdf9ffaafd2039bcde9                               0.0s 
+ => => exporting attestation manifest sha256:843da6da6636d192537a2c4b47b09fd93969201ac42e3faa713e9cacf7039ff0                 0.0s 
+ => => exporting manifest list sha256:314e22ec716a00c1e0c36236970f91e5baa3c1450b79bd5094c7af7e2b2c054d                        0.0s 
+ => => naming to docker.io/library/quickserve_api-user-service:latest                                                         0.0s 
+ => => unpacking to docker.io/library/quickserve_api-user-service:latest                                                      0.0s 
+ => [order-service] exporting to image                                                                                        0.3s 
+ => => exporting layers                                                                                                       0.2s 
+ => => exporting manifest sha256:7f65224514a8f7e739a931f498fc375193c096b74203edf87f67e0408d64d95f                             0.0s 
+ => => exporting config sha256:517c9f1ef07e9cc8bc01ee17669b84d8dc3f989d3e2aa5ee0bdbfdf12743da42                               0.0s 
+ => => exporting attestation manifest sha256:7744fa799a4f8992b0743bdd2d3e1562d3236c16203177556b609a5bf544d0e8                 0.0s 
+ => => exporting manifest list sha256:8ab27346d3d60a8423ab452cc6c0c4da9b69724ab1078406a03bbf127378db28                        0.0s 
+ => => naming to docker.io/library/quickserve_api-order-service:latest                                                        0.0s 
+ => => unpacking to docker.io/library/quickserve_api-order-service:latest                                                     0.0s 
+ => [user-service] resolving provenance for metadata file                                                                     0.0s 
+ => [order-service] resolving provenance for metadata file                                                                    0.0s 
+ => [api-gateway internal] load build definition from Dockerfile                                                              0.0s 
+ => => transferring dockerfile: 269B                                                                                          0.0s 
+ => [api-gateway internal] load .dockerignore                                                                                 0.0s 
+ => => transferring context: 2B                                                                                               0.0s 
+ => [api-gateway internal] load build context                                                                                 0.0s 
+ => => transferring context: 16.65kB                                                                                          0.0s 
+ => CACHED [api-gateway 3/5] COPY requirements.txt .                                                                          0.0s 
+ => CACHED [api-gateway 4/5] RUN pip install -r requirements.txt                                                              0.0s 
+ => [api-gateway 5/5] COPY . .                                                                                                0.1s 
+ => [api-gateway] exporting to image                                                                                          0.2s 
+ => => exporting layers                                                                                                       0.1s 
+ => => exporting manifest sha256:b6fc0ae792ec3a6008dc4c51cc2d07bebdadd57ffd86ca477ce5e9d291e5801f                             0.0s 
+ => => exporting config sha256:7b35300e4e7f2f9750ac3093e28ac31b4507c4ceeb5b16370a619e7a244b8d7c                               0.0s 
+ => => exporting attestation manifest sha256:6ba3fd5b67ee7302bccb0c8beed47bef46c20c99056bcb6b0a6a4352423f6778                 0.0s 
+ => => exporting manifest list sha256:4f9e71ccb677f7fcb74c797a71809d7b54aa02645e43115eb46e41613d70cfa5                        0.0s 
+ => => naming to docker.io/library/quickserve_api-api-gateway:latest                                                          0.0s 
+ => => unpacking to docker.io/library/quickserve_api-api-gateway:latest                                                       0.0s 
+ => [api-gateway] resolving provenance for metadata file                                                                      0.0s 
+[+] Running 7/8
+ ✔ api-gateway                               Built                                                                            0.0s 
+ ✔ order-service                             Built                                                                            0.0s 
+ ✔ user-service                              Built                                                                            0.0s 
+ ✔ Container quickserve_api-user-db-1        Running                                                                          0.0s 
+ ✔ Container quickserve_api-order-db-1       Running                                                                          0.0s 
+ - Container quickserve_api-api-gateway-1    Starting                                                                         5.6s 
+ ✔ Container quickserve_api-user-service-1   Started                                                                          5.4s 
+ ✔ Container quickserve_api-order-service-1  Started                                                                          5.3s 
+Error response from daemon: driver failed programming external connectivity on endpoint quickserve_api-api-gateway-1 (df4b6b66a3a0b1e03f440547e61a12e411176abe1389a02f83ff8f2a652a2b73): Bind for 0.0.0.0:8000 failed: port is already allocated
+
+ *  The terminal process "C:\Program Files\PowerShell\7\pwsh.exe -Command docker compose -f 'docker-compose.yml' up -d --build" terminated with exit code: 1. 
+ *  Terminal will be reused by tasks, press any key to close it. 

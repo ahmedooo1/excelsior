@@ -1,0 +1,54 @@
+2025-04-02 23:02:41 Traceback (most recent call last):
+2025-04-02 23:02:41   File "/usr/local/bin/uvicorn", line 8, in <module>
+2025-04-02 23:02:41     sys.exit(main())
+2025-04-02 23:02:41              ^^^^^^
+2025-04-02 23:02:41   File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1161, in __call__
+2025-04-02 23:02:41     return self.main(*args, **kwargs)
+2025-04-02 23:02:41            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-04-02 23:02:41   File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1082, in main
+2025-04-02 23:02:41     rv = self.invoke(ctx)
+2025-04-02 23:02:41          ^^^^^^^^^^^^^^^^
+2025-04-02 23:02:41   File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1443, in invoke
+2025-04-02 23:02:41     return ctx.invoke(self.callback, **ctx.params)
+2025-04-02 23:02:41            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-04-02 23:02:41   File "/usr/local/lib/python3.11/site-packages/click/core.py", line 788, in invoke
+2025-04-02 23:02:41     return __callback(*args, **kwargs)
+2025-04-02 23:02:41            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-04-02 23:02:41   File "/usr/local/lib/python3.11/site-packages/uvicorn/main.py", line 418, in main
+2025-04-02 23:02:41     run(
+2025-04-02 23:02:41   File "/usr/local/lib/python3.11/site-packages/uvicorn/main.py", line 587, in run
+2025-04-02 23:02:41     server.run()
+2025-04-02 23:02:41   File "/usr/local/lib/python3.11/site-packages/uvicorn/server.py", line 62, in run
+2025-04-02 23:02:41     return asyncio.run(self.serve(sockets=sockets))
+2025-04-02 23:02:41            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-04-02 23:02:41   File "/usr/local/lib/python3.11/asyncio/runners.py", line 190, in run
+2025-04-02 23:02:41     return runner.run(main)
+2025-04-02 23:02:41            ^^^^^^^^^^^^^^^^
+2025-04-02 23:02:41   File "/usr/local/lib/python3.11/asyncio/runners.py", line 118, in run
+2025-04-02 23:02:41     return self._loop.run_until_complete(task)
+2025-04-02 23:02:41            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-04-02 23:02:41   File "/usr/local/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+2025-04-02 23:02:41     return future.result()
+2025-04-02 23:02:41            ^^^^^^^^^^^^^^^
+2025-04-02 23:02:41   File "/usr/local/lib/python3.11/site-packages/uvicorn/server.py", line 69, in serve
+2025-04-02 23:02:41     config.load()
+2025-04-02 23:02:41   File "/usr/local/lib/python3.11/site-packages/uvicorn/config.py", line 458, in load
+2025-04-02 23:02:41     self.loaded_app = import_from_string(self.app)
+2025-04-02 23:02:41                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-04-02 23:02:41   File "/usr/local/lib/python3.11/site-packages/uvicorn/importer.py", line 24, in import_from_string
+2025-04-02 23:02:41     raise exc from None
+2025-04-02 23:02:41   File "/usr/local/lib/python3.11/site-packages/uvicorn/importer.py", line 21, in import_from_string
+2025-04-02 23:02:41     module = importlib.import_module(module_str)
+2025-04-02 23:02:41              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-04-02 23:02:41   File "/usr/local/lib/python3.11/importlib/__init__.py", line 126, in import_module
+2025-04-02 23:02:41     return _bootstrap._gcd_import(name[level:], package, level)
+2025-04-02 23:02:41            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-04-02 23:02:41   File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+2025-04-02 23:02:41   File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+2025-04-02 23:02:41   File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+2025-04-02 23:02:41   File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+2025-04-02 23:02:41   File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+2025-04-02 23:02:41   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+2025-04-02 23:02:41   File "/app/main.py", line 3, in <module>
+2025-04-02 23:02:41     import httpx
+2025-04-02 23:02:41 ModuleNotFoundError: No module named 'httpx'
